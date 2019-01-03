@@ -4,13 +4,15 @@ from random import uniform
 from random import choice
 import time
 
-
+menu_principal = Tk()
+menu_principal.attributes('-fullscreen',True )
 # Jeux
 
-fenetre_jeu = Tk()
+fenetre_jeu = Toplevel(menu_principal)
+fenetre_jeu.attributes('-fullscreen',True )
 
 # écran de jeu
-hauteur = 1012
+hauteur = 1080
 largeur = 1920
 
 canvas_jeu = Canvas(fenetre_jeu, width=largeur, height=hauteur, bg='black')
@@ -52,20 +54,18 @@ def jouer():
         print(position)
 
 
-
+def lancer_jeu():
+    menu_principal.withdraw()
+    jouer()
+    
 
 # Menu Principal
 
-menu_principal = Tk()
-
-
-canvas_menu = Canvas(menu_principal, width=largeur, height=hauteur, bg='black')
 menu_principal.title("Pong")
 
-btn_jouer = Button(menu_principal, text ='JOUER', command=jouer)
-btn_quitter = Button(menu_principal, text='Quitter', command=menu_principal.destroy,bg = "grey", width=12)
-canvas_menu.grid(row = 0, column = 0, columnspan =3)
+btn_jouer = Button(menu_principal, text ='JOUER', command=lancer_jeu)
+btn_quitter = Button(menu_principal, text='Quitter', command=menu_principal.destroy, bg = "grey", width=12)
 
-btn_jouer.grid(row = 1, column = 2)
-btn_quitter.grid(row = 2, column = 2)
+btn_jouer.pack()
+btn_quitter.pack()
 menu_principal.mainloop()
