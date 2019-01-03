@@ -17,6 +17,7 @@ largeur = 1920
 
 canvas_jeu = Canvas(fenetre_jeu, width=largeur, height=hauteur, bg='black')
 fenetre_jeu.title("Pong")
+canvas_jeu.create_line((largeur/2, 0), (largeur/2, hauteur), fill='white', width= 2, dash = (2, 4))
 
 canvas_jeu.pack()
 
@@ -42,7 +43,8 @@ def deplacement_balle():
         position_balle = canvas_jeu.coords(balle) #[gauche, haut, droite, bas] 
         position_raquette_1 = canvas_jeu.coords(raquette_1)
         position_raquette_2 = canvas_jeu.coords(raquette_2)
-
+        print(position_raquette_1)
+        print(position_raquette_2)
 
 
         if position_balle[2] >= largeur or position_balle[0] <= 0:
@@ -51,8 +53,18 @@ def deplacement_balle():
             vitesse_y = -vitesse_y
         if position_balle[0] <= position_raquette_1[2] and position_raquette_1[1]<= position_balle[3] and position_raquette_1[3] >= position_balle[1]:
             vitesse_x = -vitesse_x
+            vitesse_x += 0.4
+            if vitesse_y > 0:
+                vitesse_y += 0.4
+            else:
+                vitesse_y -= 0.4
         if position_balle[2] >= position_raquette_2[0] and position_raquette_2[1]<= position_balle[3] and position_raquette_2[3] >= position_balle[1]:
             vitesse_x = -vitesse_x
+            vitesse_x -= 0.4
+            if vitesse_y > 0:
+                vitesse_y += 0.4
+            else:
+                vitesse_y -= 0.4
 
         fenetre_jeu.update()
         time.sleep(0.01)
@@ -70,23 +82,36 @@ raquette_2 = canvas_jeu.create_rectangle(largeur-15, hauteur / 2 - t_raquette, l
 
 def deplacement_raquette_1(event):
 
+    position_raquette_1 = canvas_jeu.coords(raquette_1)
     vitesse = -10
-    canvas_jeu.move(raquette_1, 0, vitesse)
+
+    if position_raquette_1[1] > 10.0:
+        canvas_jeu.move(raquette_1, 0, vitesse)
+
 
 def deplacement_raquette_2(event):
 
+    position_raquette_1 = canvas_jeu.coords(raquette_1)
     vitesse = 10
-    canvas_jeu.move(raquette_1, 0, vitesse)
+
+    if position_raquette_1[3] < 1070.0:
+        canvas_jeu.move(raquette_1, 0, vitesse)
 
 def deplacement_raquette_3(event):
 
     vitesse = -10
-    canvas_jeu.move(raquette_2, 0, vitesse)
+    position_raquette_2 = canvas_jeu.coords(raquette_2)
+
+    if position_raquette_2[1] > 10.0:
+        canvas_jeu.move(raquette_2, 0, vitesse)
 
 def deplacement_raquette_4(event):
 
     vitesse = 10
-    canvas_jeu.move(raquette_2, 0, vitesse)
+    position_raquette_2 = canvas_jeu.coords(raquette_2)
+
+    if position_raquette_2[3] < 1070.0:
+        canvas_jeu.move(raquette_2, 0, vitesse)
 
 
 fenetre_jeu.bind("<Tab>", deplacement_raquette_1)
