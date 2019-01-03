@@ -63,9 +63,11 @@ def lancer_jeu():
 
 menu_principal.title("Pong")
 
-btn_jouer = Button(menu_principal, text ='JOUER', command=lancer_jeu)
-btn_quitter = Button(menu_principal, text='Quitter', command=menu_principal.destroy, bg = "grey", width=12)
+texte_titre = Label(menu_principal, text='PONG')
+btn_jouer = Button(menu_principal, text ='JOUER', command=lancer_jeu, bg = 'green', width = 12)
+btn_quitter = Button(menu_principal, text='Quitter', command=menu_principal.destroy, bg = "red", width=12)
 
-btn_jouer.pack()
-btn_quitter.pack()
+texte_titre.place(relx = 0.5, rely = 0.45, anchor = CENTER)
+btn_jouer.place(relx = 0.5, rely = 0.5, anchor = CENTER)
+btn_quitter.place(relx = 0.5, rely = 0.55, anchor = CENTER)
 menu_principal.mainloop()
