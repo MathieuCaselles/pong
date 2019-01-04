@@ -29,15 +29,23 @@ t_balle = 30
 
 balle = canvas_jeu.create_oval(largeur / 2 - t_balle, hauteur / 2 - t_balle, largeur / 2 + t_balle, hauteur / 2 + t_balle, fill='white')
 
-
 # faire bouger la balle + rebondir + victoir
 
+score = canvas_jeu.create_text(largeur / 2 - 3, 40, text= '0   0', fill = 'white', font = ('Arial', 50, 'bold'))
+message_victoire = canvas_jeu.create_text(-1, -1, text= '', fill = 'white', font = ('Arial', 100, 'bold'))
 
 def deplacement_balle():
 
     vitesse_x = choice([-1, 1])
     vitesse_y = choice([-1, 1])
     jeu_en_cour = True
+
+    score_j1 = 0
+    score_j2 = 0
+    gagnant = ''
+    
+    canvas_jeu.itemconfigure(score, text = str(score_j1) + '   ' + str(score_j2))
+
 
     while jeu_en_cour == True :
 
@@ -69,30 +77,61 @@ def deplacement_balle():
 
         if position_balle[2] >= largeur:
             canvas_jeu.coords(balle, largeur / 2 - t_balle, hauteur / 2 - t_balle, largeur / 2 + t_balle, hauteur / 2 + t_balle)
-            canvas_jeu.coords(raquette_2, largeur-15, hauteur / 2 - t_raquette, largeur-30, hauteur / 2 + t_raquette)
-            menu_principal.wm_deiconify()
-            jeu_en_cour = False
+            score_j1 += 1
+            canvas_jeu.itemconfigure(score, text = str(score_j1) + '   ' + str(score_j2))
+            if score_j1 >= 3:
+                gagnant = 'Joueur 1'
+                canvas_jeu.itemconfigure(message_victoire, text = 'Victore du ' + gagnant)
+                canvas_jeu.coords(message_victoire, largeur / 2, hauteur / 2)
+                canvas_jeu.coords(balle, -1, -1, -1, -1)
+                fenetre_jeu.update()
+                time.sleep(5)
+                canvas_jeu.coords(message_victoire, -100, -100)
+                canvas_jeu.coords(balle, largeur / 2 - t_balle, hauteur / 2 - t_balle, largeur / 2 + t_balle, hauteur / 2 + t_balle)
+                canvas_jeu.coords(raquette_1, 15, hauteur / 2 - t_raquette, 30, hauteur / 2 + t_raquette)
+                canvas_jeu.coords(raquette_2, largeur-15, hauteur / 2 - t_raquette, largeur-30, hauteur / 2 + t_raquette)
+                menu_principal.wm_deiconify()
+                fenetre_jeu.withdraw()
+                jeu_en_cour = False
 
         elif position_balle[0] <= 0:
             canvas_jeu.coords(balle, largeur / 2 - t_balle, hauteur / 2 - t_balle, largeur / 2 + t_balle, hauteur / 2 + t_balle)
-            canvas_jeu.coords(raquette_1, 15, hauteur / 2 - t_raquette, 30, hauteur / 2 + t_raquette)
-            menu_principal.wm_deiconify()
-            jeu_en_cour = False
+            score_j2 += 1
+            canvas_jeu.itemconfigure(score, text = str(score_j1) + '   ' + str(score_j2))
+            if score_j2 >= 3:         
+                gagnant = 'Joueur 2'
+                canvas_jeu.itemconfigure(message_victoire, text = 'Victore du ' + gagnant)
+                canvas_jeu.coords(message_victoire, largeur / 2, hauteur / 2)
+                canvas_jeu.coords(balle, -1, -1, -1, -1)
+                fenetre_jeu.update()
+                time.sleep(5)
+                canvas_jeu.coords(message_victoire, -100, -100)
+                canvas_jeu.coords(balle, largeur / 2 - t_balle, hauteur / 2 - t_balle, largeur / 2 + t_balle, hauteur / 2 + t_balle)
+                canvas_jeu.coords(raquette_1, 15, hauteur / 2 - t_raquette, 30, hauteur / 2 + t_raquette)
+                canvas_jeu.coords(raquette_2, largeur-15, hauteur / 2 - t_raquette, largeur-30, hauteur / 2 + t_raquette)
+                menu_principal.wm_deiconify()
+                fenetre_jeu.withdraw()
+                jeu_en_cour = False
 
         fenetre_jeu.update()
         time.sleep(0.01)
 
+    
+
 def lancer_parametre():
-    menu_principal.withdraw()
     fenetre_parametre.wm_deiconify()
+    menu_principal.withdraw()
+    
 
 def retour():
-    fenetre_parametre.withdraw()
     menu_principal.wm_deiconify()
+    fenetre_parametre.withdraw()
+
 
 def lancer_jeu():
-    fenetre_parametre.withdraw()
     fenetre_jeu.wm_deiconify()
+    fenetre_parametre.withdraw()
+
     deplacement_balle()
     
 
@@ -170,6 +209,6 @@ btn_retour.place(relx = 0.5, rely = 0.55, anchor = CENTER)
 fenetre_parametre.withdraw()
 
 fenetre_parametre.mainloop()
+
+
 menu_principal.mainloop()
-
-
