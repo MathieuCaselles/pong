@@ -29,15 +29,17 @@ t_balle = 30
 
 balle = canvas_jeu.create_oval(largeur / 2 - t_balle, hauteur / 2 - t_balle, largeur / 2 + t_balle, hauteur / 2 + t_balle, fill='white')
 
-# faire bouger la balle + rebondir
+
+# faire bouger la balle + rebondir + victoir
 
 
 def deplacement_balle():
 
     vitesse_x = choice([-1, 1])
     vitesse_y = choice([-1, 1])
+    jeu_en_cour = True
 
-    while True:
+    while jeu_en_cour == True :
 
         canvas_jeu.move(balle, vitesse_x, vitesse_y)
         position_balle = canvas_jeu.coords(balle) #[gauche, haut, droite, bas] 
@@ -47,8 +49,7 @@ def deplacement_balle():
         print(position_raquette_2)
 
 
-        if position_balle[2] >= largeur or position_balle[0] <= 0:
-            vitesse_x = -vitesse_x
+
         if position_balle[3] >= hauteur or position_balle[1] <= 0:
             vitesse_y = -vitesse_y
         if position_balle[0] <= position_raquette_1[2] and position_raquette_1[1]<= position_balle[3] and position_raquette_1[3] >= position_balle[1]:
@@ -65,6 +66,18 @@ def deplacement_balle():
                 vitesse_y += 0.4
             else:
                 vitesse_y -= 0.4
+
+        if position_balle[2] >= largeur:
+            canvas_jeu.coords(balle, largeur / 2 - t_balle, hauteur / 2 - t_balle, largeur / 2 + t_balle, hauteur / 2 + t_balle)
+            canvas_jeu.coords(raquette_2, largeur-15, hauteur / 2 - t_raquette, largeur-30, hauteur / 2 + t_raquette)
+            menu_principal.wm_deiconify()
+            jeu_en_cour = False
+
+        elif position_balle[0] <= 0:
+            canvas_jeu.coords(balle, largeur / 2 - t_balle, hauteur / 2 - t_balle, largeur / 2 + t_balle, hauteur / 2 + t_balle)
+            canvas_jeu.coords(raquette_1, 15, hauteur / 2 - t_raquette, 30, hauteur / 2 + t_raquette)
+            menu_principal.wm_deiconify()
+            jeu_en_cour = False
 
         fenetre_jeu.update()
         time.sleep(0.01)
@@ -132,3 +145,7 @@ btn_jouer.place(relx = 0.5, rely = 0.5, anchor = CENTER)
 btn_quitter.place(relx = 0.5, rely = 0.55, anchor = CENTER)
 
 menu_principal.mainloop()
+
+
+
+
