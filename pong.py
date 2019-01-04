@@ -20,7 +20,7 @@ fenetre_jeu.title("Pong")
 canvas_jeu.create_line((largeur/2, 0), (largeur/2, hauteur), fill='white', width= 2, dash = (2, 4))
 
 canvas_jeu.pack()
-
+fenetre_jeu.withdraw()
 # balle
 
 t_balle = 30
@@ -82,9 +82,17 @@ def deplacement_balle():
         fenetre_jeu.update()
         time.sleep(0.01)
 
+def lancer_parametre():
+    menu_principal.withdraw()
+    fenetre_parametre.wm_deiconify()
+
+def retour():
+    fenetre_parametre.withdraw()
+    menu_principal.wm_deiconify()
 
 def lancer_jeu():
-    menu_principal.withdraw()
+    fenetre_parametre.withdraw()
+    fenetre_jeu.wm_deiconify()
     deplacement_balle()
     
 
@@ -137,15 +145,31 @@ fenetre_jeu.bind("<Down>", deplacement_raquette_4)
 menu_principal.title("Pong")
 
 texte_titre = Label(menu_principal, text='PONG')
-btn_jouer = Button(menu_principal, text ='JOUER', command=lancer_jeu, bg = 'green', width = 12)
+btn_jouer = Button(menu_principal, text ='JOUER', command=lancer_parametre, bg = 'green', width = 12)
 btn_quitter = Button(menu_principal, text='Quitter', command=menu_principal.destroy, bg = "red", width=12)
 
 texte_titre.place(relx = 0.5, rely = 0.45, anchor = CENTER)
 btn_jouer.place(relx = 0.5, rely = 0.5, anchor = CENTER)
 btn_quitter.place(relx = 0.5, rely = 0.55, anchor = CENTER)
 
+# paramètres
+
+fenetre_parametre = Toplevel(menu_principal)
+fenetre_parametre.attributes('-fullscreen',True )
+
+fenetre_parametre.title("Pong")
+
+texte_parametre = Label(fenetre_parametre, text='Paramètres du jeu')
+btn_jouer_2 = Button(fenetre_parametre, text ='JOUER', command=lancer_jeu, bg = 'green', width = 12)
+btn_retour = Button(fenetre_parametre, text='Retour', command=retour, bg = "red", width=12)
+
+texte_parametre.place(relx = 0.5, rely = 0.45, anchor = CENTER)
+btn_jouer_2.place(relx = 0.5, rely = 0.5, anchor = CENTER)
+btn_retour.place(relx = 0.5, rely = 0.55, anchor = CENTER)
+
+fenetre_parametre.withdraw()
+
+fenetre_parametre.mainloop()
 menu_principal.mainloop()
-
-
 
 
