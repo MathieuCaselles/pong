@@ -43,6 +43,8 @@ def deplacement_balle():
     score_j1 = 0
     score_j2 = 0
     gagnant = ''
+
+    points_pour_gg = int(saisie_pts.get())
     
     canvas_jeu.itemconfigure(score, text = str(score_j1) + '   ' + str(score_j2))
 
@@ -53,8 +55,6 @@ def deplacement_balle():
         position_balle = canvas_jeu.coords(balle) #[gauche, haut, droite, bas] 
         position_raquette_1 = canvas_jeu.coords(raquette_1)
         position_raquette_2 = canvas_jeu.coords(raquette_2)
-        print(position_raquette_1)
-        print(position_raquette_2)
 
 
 
@@ -79,7 +79,7 @@ def deplacement_balle():
             canvas_jeu.coords(balle, largeur / 2 - t_balle, hauteur / 2 - t_balle, largeur / 2 + t_balle, hauteur / 2 + t_balle)
             score_j1 += 1
             canvas_jeu.itemconfigure(score, text = str(score_j1) + '   ' + str(score_j2))
-            if score_j1 >= 3:
+            if score_j1 >= points_pour_gg:
                 gagnant = 'Joueur 1'
                 canvas_jeu.itemconfigure(message_victoire, text = 'Victore du ' + gagnant)
                 canvas_jeu.coords(message_victoire, largeur / 2, hauteur / 2)
@@ -98,7 +98,7 @@ def deplacement_balle():
             canvas_jeu.coords(balle, largeur / 2 - t_balle, hauteur / 2 - t_balle, largeur / 2 + t_balle, hauteur / 2 + t_balle)
             score_j2 += 1
             canvas_jeu.itemconfigure(score, text = str(score_j1) + '   ' + str(score_j2))
-            if score_j2 >= 3:         
+            if score_j2 >= points_pour_gg:         
                 gagnant = 'Joueur 2'
                 canvas_jeu.itemconfigure(message_victoire, text = 'Victore du ' + gagnant)
                 canvas_jeu.coords(message_victoire, largeur / 2, hauteur / 2)
@@ -193,18 +193,34 @@ btn_quitter.place(relx = 0.5, rely = 0.55, anchor = CENTER)
 
 # paramètres
 
+def test():
+    print(saisie_pts.get())
+
 fenetre_parametre = Toplevel(menu_principal)
 fenetre_parametre.attributes('-fullscreen',True )
 
 fenetre_parametre.title("Pong")
 
 texte_parametre = Label(fenetre_parametre, text='Paramètres du jeu')
+texte_pts = Label(fenetre_parametre, text='Nombre de points pour gagner :')
+
+saisie_pts = Entry(fenetre_parametre, width= 3)
+
+
+valider_pts = Button(fenetre_parametre, text ='Valider', command=test)
 btn_jouer_2 = Button(fenetre_parametre, text ='JOUER', command=lancer_jeu, bg = 'green', width = 12)
 btn_retour = Button(fenetre_parametre, text='Retour', command=retour, bg = "red", width=12)
 
 texte_parametre.place(relx = 0.5, rely = 0.45, anchor = CENTER)
+texte_pts.place(relx = 0.35, rely = 0.6, anchor = CENTER)
+
+saisie_pts.place(relx = 0.41, rely = 0.6, anchor = CENTER)
+
 btn_jouer_2.place(relx = 0.5, rely = 0.5, anchor = CENTER)
 btn_retour.place(relx = 0.5, rely = 0.55, anchor = CENTER)
+valider_pts.place(relx = 0.45, rely = 0.6, anchor = CENTER)
+
+
 
 fenetre_parametre.withdraw()
 
