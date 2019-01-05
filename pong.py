@@ -3,6 +3,7 @@ from random import randint
 from random import uniform
 from random import choice
 import time
+import tkinter.ttk as ttk
 
 menu_principal = Tk()
 menu_principal.attributes('-fullscreen',True )
@@ -36,8 +37,22 @@ message_victoire = canvas_jeu.create_text(-1, -1, text= '', fill = 'white', font
 
 def deplacement_balle():
 
-    vitesse_x = choice([-1, 1])
-    vitesse_y = choice([-1, 1])
+    points_pour_gg = int(saisie_pts.get())
+    vitesse_depart = saisie_vitesse.get()
+
+    if vitesse_depart == 'Très lent':
+        vitesse_depart = 1
+    elif vitesse_depart == 'Lent':
+        vitesse_depart = 2
+    elif vitesse_depart == 'Moyen':
+        vitesse_depart = 3
+    else:
+        vitesse_depart = 4
+
+
+    vitesse_x = choice([-vitesse_depart, vitesse_depart])
+    vitesse_y = choice([-vitesse_depart, vitesse_depart])
+    
     jeu_en_cour = True
 
     score_j1 = 0
@@ -191,10 +206,22 @@ texte_titre.place(relx = 0.5, rely = 0.45, anchor = CENTER)
 btn_jouer.place(relx = 0.5, rely = 0.5, anchor = CENTER)
 btn_quitter.place(relx = 0.5, rely = 0.55, anchor = CENTER)
 
+# rejouer
+
+fenetre_rejouer = Toplevel(menu_principal)
+fenetre_rejouer.geometry("500x500+720+270")
+fenetre_rejouer.title("Pong")
+
+
+texte_rejouer = Label(fenetre_rejouer, text='Rejouer ?')
+
+texte_rejouer.place(relx = 0.5, rely = 0.30, anchor = CENTER)
+
+
 # paramètres
 
 def test():
-    print(saisie_pts.get())
+    print(saisie_vitesse.get())
 
 fenetre_parametre = Toplevel(menu_principal)
 fenetre_parametre.attributes('-fullscreen',True )
@@ -203,8 +230,14 @@ fenetre_parametre.title("Pong")
 
 texte_parametre = Label(fenetre_parametre, text='Paramètres du jeu')
 texte_pts = Label(fenetre_parametre, text='Nombre de points pour gagner :')
+texte_vitesse = Label(fenetre_parametre, text='Vitesse de la balle en début de partie :')
 
 saisie_pts = Entry(fenetre_parametre, width= 3)
+
+choix_vitesse = ['Très lent', 'Lent', 'Moyen', 'Rapide']
+saisie_vitesse = ttk.Combobox(fenetre_parametre, values = choix_vitesse, width = 9)
+
+
 
 
 valider_pts = Button(fenetre_parametre, text ='Valider', command=test)
@@ -213,8 +246,10 @@ btn_retour = Button(fenetre_parametre, text='Retour', command=retour, bg = "red"
 
 texte_parametre.place(relx = 0.5, rely = 0.45, anchor = CENTER)
 texte_pts.place(relx = 0.35, rely = 0.6, anchor = CENTER)
+texte_vitesse.place(relx = 0.35, rely = 0.65, anchor = CENTER)
 
 saisie_pts.place(relx = 0.41, rely = 0.6, anchor = CENTER)
+saisie_vitesse.place(relx = 0.43, rely = 0.65, anchor = CENTER)
 
 btn_jouer_2.place(relx = 0.5, rely = 0.5, anchor = CENTER)
 btn_retour.place(relx = 0.5, rely = 0.55, anchor = CENTER)
@@ -225,6 +260,7 @@ valider_pts.place(relx = 0.45, rely = 0.6, anchor = CENTER)
 fenetre_parametre.withdraw()
 
 fenetre_parametre.mainloop()
-
-
+fenetre_rejouer.mainloop()
 menu_principal.mainloop()
+
+
