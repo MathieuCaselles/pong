@@ -117,8 +117,7 @@ def deplacement_balle():
                 canvas_jeu.coords(balle, largeur / 2 - t_balle, hauteur / 2 - t_balle, largeur / 2 + t_balle, hauteur / 2 + t_balle)
                 canvas_jeu.coords(raquette_1, 15, hauteur / 2 - t_raquette, 30, hauteur / 2 + t_raquette)
                 canvas_jeu.coords(raquette_2, largeur-15, hauteur / 2 - t_raquette, largeur-30, hauteur / 2 + t_raquette)
-                menu_principal.wm_deiconify()
-                fenetre_jeu.withdraw()
+                fenetre_rejouer.wm_deiconify()
                 jeu_en_cour = False
 
         elif position_balle[0] <= 0:
@@ -136,8 +135,7 @@ def deplacement_balle():
                 canvas_jeu.coords(balle, largeur / 2 - t_balle, hauteur / 2 - t_balle, largeur / 2 + t_balle, hauteur / 2 + t_balle)
                 canvas_jeu.coords(raquette_1, 15, hauteur / 2 - t_raquette, 30, hauteur / 2 + t_raquette)
                 canvas_jeu.coords(raquette_2, largeur-15, hauteur / 2 - t_raquette, largeur-30, hauteur / 2 + t_raquette)
-                menu_principal.wm_deiconify()
-                fenetre_jeu.withdraw()
+                fenetre_rejouer.wm_deiconify()
                 jeu_en_cour = False
 
         fenetre_jeu.update()
@@ -160,7 +158,15 @@ def lancer_jeu():
     fenetre_parametre.withdraw()
 
     deplacement_balle()
-    
+
+def relancer_jeu():
+    fenetre_rejouer.withdraw()
+    deplacement_balle()
+
+def ne_pas_relancer():
+    fenetre_rejouer.withdraw()
+    menu_principal.wm_deiconify()
+    fenetre_jeu.withdraw()
 
 # raqutte
 t_raquette = 60
@@ -227,7 +233,13 @@ fenetre_rejouer.title("Pong")
 
 texte_rejouer = Label(fenetre_rejouer, text='Rejouer ?')
 
+btn_oui = Button(fenetre_rejouer, text ='Oui ! :D', command=relancer_jeu, bg = 'green', width = 12)
+btn_non = Button(fenetre_rejouer, text='Nop !', command=ne_pas_relancer, bg = "red", width=12)
+
 texte_rejouer.place(relx = 0.5, rely = 0.30, anchor = CENTER)
+
+btn_oui.place(relx = 0.5, rely = 0.5, anchor = CENTER)
+btn_non.place(relx = 0.5, rely = 0.6, anchor = CENTER)
 
 
 # paramètres
@@ -287,6 +299,7 @@ valider_pts.place(relx = 0.45, rely = 0.6, anchor = CENTER)
 
 
 fenetre_parametre.withdraw()
+fenetre_rejouer.withdraw()
 
 fenetre_parametre.mainloop()
 fenetre_rejouer.mainloop()
