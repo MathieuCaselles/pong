@@ -18,7 +18,7 @@ largeur = 1920
 
 canvas_jeu = Canvas(fenetre_jeu, width=largeur, height=hauteur, bg='black')
 fenetre_jeu.title("Pong")
-canvas_jeu.create_line((largeur/2, 0), (largeur/2, hauteur), fill='white', width= 2, dash = (2, 4))
+ligne_separatrice = canvas_jeu.create_line((largeur/2, 0), (largeur/2, hauteur), fill='white', width= 2, dash = (2, 4))
 
 canvas_jeu.pack()
 fenetre_jeu.withdraw()
@@ -49,10 +49,22 @@ def deplacement_balle():
     else:
         vitesse_depart = 4
 
+    color_bg = saisie_c_bg.get()
+
+    canvas_jeu.itemconfigure(balle, fill = saisie_c_balle.get())
+    canvas_jeu.itemconfigure(raquette_1, fill = saisie_c_r1.get())
+    canvas_jeu.itemconfigure(raquette_2, fill = saisie_c_r2.get())
+    canvas_jeu.configure(bg = color_bg)
+
+    if color_bg == 'white':
+        canvas_jeu.itemconfigure(ligne_separatrice, fill = 'black')
+        canvas_jeu.itemconfigure(score, fill = 'black')
+        canvas_jeu.itemconfigure(message_victoire, fill = 'black')
+
 
     vitesse_x = choice([-vitesse_depart, vitesse_depart])
     vitesse_y = choice([-vitesse_depart, vitesse_depart])
-    
+
     jeu_en_cour = True
 
     score_j1 = 0
@@ -231,12 +243,21 @@ fenetre_parametre.title("Pong")
 texte_parametre = Label(fenetre_parametre, text='Paramètres du jeu')
 texte_pts = Label(fenetre_parametre, text='Nombre de points pour gagner :')
 texte_vitesse = Label(fenetre_parametre, text='Vitesse de la balle en début de partie :')
+texte_balle = Label(fenetre_parametre, text='Couleur de la balle :')
+texte_r1 = Label(fenetre_parametre, text='Couleur de la raquette du J1 :')
+texte_r2 = Label(fenetre_parametre, text='Couleur de la raquette du J2 :')
+texte_bg = Label(fenetre_parametre, text="Couleur du fond d'écran :")
 
 saisie_pts = Entry(fenetre_parametre, width= 3)
 
 choix_vitesse = ['Très lent', 'Lent', 'Moyen', 'Rapide']
 saisie_vitesse = ttk.Combobox(fenetre_parametre, values = choix_vitesse, width = 9)
 
+choix_couleur = ['white', 'black', 'red', 'green', 'blue', 'cyan', 'yellow', 'magenta']
+saisie_c_balle = ttk.Combobox(fenetre_parametre, values = choix_couleur, width = 9)
+saisie_c_r1 = ttk.Combobox(fenetre_parametre, values = choix_couleur, width = 9)
+saisie_c_r2 = ttk.Combobox(fenetre_parametre, values = choix_couleur, width = 9)
+saisie_c_bg = ttk.Combobox(fenetre_parametre, values = choix_couleur, width = 9)
 
 
 
@@ -247,9 +268,17 @@ btn_retour = Button(fenetre_parametre, text='Retour', command=retour, bg = "red"
 texte_parametre.place(relx = 0.5, rely = 0.45, anchor = CENTER)
 texte_pts.place(relx = 0.35, rely = 0.6, anchor = CENTER)
 texte_vitesse.place(relx = 0.35, rely = 0.65, anchor = CENTER)
+texte_balle.place(relx = 0.35, rely = 0.7, anchor = CENTER)
+texte_r1.place(relx = 0.35, rely = 0.75, anchor = CENTER)
+texte_r2.place(relx = 0.35, rely = 0.8, anchor = CENTER)
+texte_bg.place(relx = 0.35, rely = 0.85, anchor = CENTER)
 
 saisie_pts.place(relx = 0.41, rely = 0.6, anchor = CENTER)
 saisie_vitesse.place(relx = 0.43, rely = 0.65, anchor = CENTER)
+saisie_c_balle.place(relx = 0.43, rely = 0.7, anchor = CENTER)
+saisie_c_r1.place(relx = 0.43, rely = 0.75, anchor = CENTER)
+saisie_c_r2.place(relx = 0.43, rely = 0.8, anchor = CENTER)
+saisie_c_bg.place(relx = 0.43, rely = 0.85, anchor = CENTER)
 
 btn_jouer_2.place(relx = 0.5, rely = 0.5, anchor = CENTER)
 btn_retour.place(relx = 0.5, rely = 0.55, anchor = CENTER)
