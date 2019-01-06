@@ -87,6 +87,12 @@ def deplacement_balle():
     effet_vert = None
     effet_rouge = None
 
+    bouclier_j_1 = 0
+    bouclier_j_2 = 0
+
+    lieu_de_spawn_x = 0
+    lieu_de_spawn_y = 0
+
 
     while jeu_en_cour == True :
 
@@ -110,6 +116,9 @@ def deplacement_balle():
             else:
                 vitesse_y -= 0.4
             boost_joueur = 1
+            if bouclier_j_1 == 1:
+                canvas_jeu.coords(raquette_1, 15, hauteur / 2 - t_raquette, 30, hauteur / 2 + t_raquette)
+                bouclier_j_1 = 0
 
         if len(canvas_jeu.find_overlapping(*position_raquette_2)) > 1:
             vitesse_x = -vitesse_x
@@ -120,6 +129,9 @@ def deplacement_balle():
             else:
                 vitesse_y -= 0.4
             boost_joueur = 2
+            if bouclier_j_2 == 1:
+                canvas_jeu.coords(raquette_2, largeur-15, hauteur / 2 - t_raquette, largeur-30, hauteur / 2 + t_raquette)
+                bouclier_j_2 = 0
 
         if boost_balle_x != 1 or boost_balle_y != 1:
             annuler_bonus = randint(0, 1600)
@@ -195,7 +207,7 @@ def deplacement_balle():
 
         if len(canvas_jeu.find_overlapping(*position_bonus_malus_vert)) > 1:
             canvas_jeu.coords(bonus_malus_vert, largeur, hauteur, largeur, hauteur)
-            effet_vert = choice(['grande_raquette', 'raquette_rapide'])
+            effet_vert = choice(['grande_raquette', 'bouclier'])
             if effet_vert == 'grande_raquette':
                 if boost_joueur == 1:
                     canvas_jeu.coords(raquette_1, 15, hauteur / 2 - 120, 30, hauteur / 2 + 120)
@@ -206,19 +218,18 @@ def deplacement_balle():
                 else:
                     pass
 
-            elif effet_vert == 'raquette_rapide':
+            elif effet_vert == 'bouclier':
                 if boost_joueur == 1:
-                    canvas_jeu.coords(raquette_1, 15, hauteur / 2 - 120, 30, hauteur / 2 + 120)
-                    boost_raquette = 1
+                    bouclier_j_1 = 1
+                    canvas_jeu.coords(raquette_1, 15, hauteur / 2 - hauteur, 30, hauteur / 2 + hauteur)
                 elif boost_joueur == 2:
-                    canvas_jeu.coords(raquette_2, largeur-15, hauteur / 2 - 120, largeur-30, hauteur / 2 + 120)
-                    boost_raquette = 1
-                else:
-                    pass
+                    bouclier_j_2 = 1
+                    canvas_jeu.coords(raquette_2, largeur-15, hauteur / 2 - hauteur, largeur-30, hauteur / 2 + hauteur)
+                
 
         if len(canvas_jeu.find_overlapping(*position_bonus_malus_rouge)) > 1:
             canvas_jeu.coords(bonus_malus_rouge, largeur, -hauteur, largeur, -hauteur)
-            effet_rouge = choice(['petite_raquette', 'raquette_inverse'])
+            effet_rouge = choice(['petite_raquette', 'balle_dangereuse'])
             if effet_rouge == 'petite_raquette':
                 if boost_joueur == 1:
                     canvas_jeu.coords(raquette_2, largeur-15, hauteur / 2 - 30, largeur-30, hauteur / 2 + 30)
@@ -229,16 +240,10 @@ def deplacement_balle():
                 else:
                     pass
 
-            elif effet_rouge == 'raquette_inverse':
-                if boost_joueur == 1:
-                    canvas_jeu.coords(raquette_2, largeur-15, hauteur / 2 - 30, largeur-30, hauteur / 2 + 30)
-                    boost_raquette = 2
-                elif boost_joueur == 2:
-                    canvas_jeu.coords(raquette_1, 15, hauteur / 2 - 30, 30, hauteur / 2 + 30)
-                    boost_raquette = 2
-                else:
-                    pass
-
+            elif effet_rouge == 'balle_dangereuse':
+                lieu_de_spawn_x = randint(100, 1820)
+                lieu_de_spawn_y = randint(50, 1030)
+                canvas_jeu.coords(balle, lieu_de_spawn_x - t_balle, lieu_de_spawn_y - t_balle, lieu_de_spawn_x + t_balle,lieu_de_spawn_y + t_balle)
 
 
         bonus_malus()                
