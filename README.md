@@ -9,7 +9,7 @@ J2 ——> flêche haut et bas
 ## Les bonus:
 
 Les bonus spawn aléatoirement sur la map. Une fois qu'un bonus à pop, il restera sur la map jusqu'a être utilisé mais attention il peux changer d'endroit à n'importe quel moment !
-Une fois un bonus activé il resetra actif pendant une durée aléatoire !!! Il peut rester actif pendant 2 min comme 1 sec ! 
+Une fois un bonus activé il restera actif pendant une durée aléatoire !!! Il peut rester actif pendant 2 min comme 1 sec ! 
 De plus quand un bonus pop ou se déplace il peut directement pop sur la balle ce qui activera un effet sans que personne ne s'y attende ! Mwahahaha
 
 Il existe 3 types de bonus:
