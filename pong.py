@@ -75,33 +75,71 @@ def deplacement_balle():
     
     canvas_jeu.itemconfigure(score, text = str(score_j1) + '   ' + str(score_j2))
 
+    boost_balle_x = 1
+    boost_balle_y = 1
+    boost_raquette = 0
+
+    annuler_bonus = None
+
+    boost_joueur = 0
+
+    effet_jaune = None
+    effet_vert = None
+    effet_rouge = None
+
 
     while jeu_en_cour == True :
 
-        canvas_jeu.move(balle, vitesse_x, vitesse_y)
+        canvas_jeu.move(balle, vitesse_x * boost_balle_x, vitesse_y * boost_balle_y)
         position_balle = canvas_jeu.coords(balle) #[gauche, haut, droite, bas] 
         position_raquette_1 = canvas_jeu.coords(raquette_1)
         position_raquette_2 = canvas_jeu.coords(raquette_2)
         position_bonus_malus_jaune = canvas_jeu.coords(bonus_malus_jaune)
-
-
+        position_bonus_malus_vert = canvas_jeu.coords(bonus_malus_vert)
+        position_bonus_malus_rouge = canvas_jeu.coords(bonus_malus_rouge)
 
         if position_balle[3] >= hauteur or position_balle[1] <= 0:
             vitesse_y = -vitesse_y
+
         if len(canvas_jeu.find_overlapping(*position_raquette_1)) > 1:
             vitesse_x = -vitesse_x
             vitesse_x += 0.4
+            canvas_jeu.move(balle, vitesse_x + 5, vitesse_y)
             if vitesse_y > 0:
                 vitesse_y += 0.4
             else:
                 vitesse_y -= 0.4
+            boost_joueur = 1
+
         if len(canvas_jeu.find_overlapping(*position_raquette_2)) > 1:
             vitesse_x = -vitesse_x
             vitesse_x -= 0.4
+            canvas_jeu.move(balle, vitesse_x - 5, vitesse_y)
             if vitesse_y > 0:
                 vitesse_y += 0.4
             else:
                 vitesse_y -= 0.4
+            boost_joueur = 2
+
+        if boost_balle_x != 1 or boost_balle_y != 1:
+            annuler_bonus = randint(0, 1600)
+            if annuler_bonus == 888:
+                boost_balle_x = 1
+                boost_balle_y = 1
+
+        if boost_raquette == 1:
+            annuler_bonus = randint(0, 2500)
+            if annuler_bonus == 777:
+                canvas_jeu.coords(raquette_1, 15, hauteur / 2 - t_raquette, 30, hauteur / 2 + t_raquette)
+                canvas_jeu.coords(raquette_2, largeur-15, hauteur / 2 - t_raquette, largeur-30, hauteur / 2 + t_raquette)
+                boost_raquette = 0
+        if boost_raquette == 2:
+            annuler_bonus = randint(0, 2500)
+            if annuler_bonus == 666:
+                canvas_jeu.coords(raquette_1, 15, hauteur / 2 - t_raquette, 30, hauteur / 2 + t_raquette)
+                canvas_jeu.coords(raquette_2, largeur-15, hauteur / 2 - t_raquette, largeur-30, hauteur / 2 + t_raquette)
+                boost_raquette = 0
+
 
         if position_balle[2] >= largeur:
             canvas_jeu.coords(balle, largeur / 2 - t_balle, hauteur / 2 - t_balle, largeur / 2 + t_balle, hauteur / 2 + t_balle)
@@ -139,14 +177,74 @@ def deplacement_balle():
                 fenetre_rejouer.wm_deiconify()
                 jeu_en_cour = False
 
-        bonus_malus()
         if len(canvas_jeu.find_overlapping(*position_bonus_malus_jaune)) > 1:
-            canvas_jeu.coords(bonus_malus_jaune, -1, -1, -1, -1)
+            canvas_jeu.coords(bonus_malus_jaune, 1, 1, 1, 1)
+            effet_jaune = choice(['accélère', 'décélère', 'y_boost', 'x_boost', 'rebond'])
+            if effet_jaune == 'accélère':
+                boost_balle_x = 1.5
+                boost_balle_y = 1.5
+            elif effet_jaune == 'décélère':
+                boost_balle_x = 0.5
+                boost_balle_y = 0.5
+            elif effet_jaune == 'y_boost':
+                boost_balle_y = 1.5
+            elif effet_jaune == 'y_boost':
+                boost_balle_x = 1.5
+            else:
+                vitesse_x = -vitesse_x
 
+        if len(canvas_jeu.find_overlapping(*position_bonus_malus_vert)) > 1:
+            canvas_jeu.coords(bonus_malus_vert, largeur, hauteur, largeur, hauteur)
+            effet_vert = choice(['grande_raquette', 'raquette_rapide'])
+            if effet_vert == 'grande_raquette':
+                if boost_joueur == 1:
+                    canvas_jeu.coords(raquette_1, 15, hauteur / 2 - 120, 30, hauteur / 2 + 120)
+                    boost_raquette = 1
+                elif boost_joueur == 2:
+                    canvas_jeu.coords(raquette_2, largeur-15, hauteur / 2 - 120, largeur-30, hauteur / 2 + 120)
+                    boost_raquette = 1
+                else:
+                    pass
+
+            elif effet_vert == 'raquette_rapide':
+                if boost_joueur == 1:
+                    canvas_jeu.coords(raquette_1, 15, hauteur / 2 - 120, 30, hauteur / 2 + 120)
+                    boost_raquette = 1
+                elif boost_joueur == 2:
+                    canvas_jeu.coords(raquette_2, largeur-15, hauteur / 2 - 120, largeur-30, hauteur / 2 + 120)
+                    boost_raquette = 1
+                else:
+                    pass
+
+        if len(canvas_jeu.find_overlapping(*position_bonus_malus_rouge)) > 1:
+            canvas_jeu.coords(bonus_malus_rouge, largeur, -hauteur, largeur, -hauteur)
+            effet_rouge = choice(['petite_raquette', 'raquette_inverse'])
+            if effet_rouge == 'petite_raquette':
+                if boost_joueur == 1:
+                    canvas_jeu.coords(raquette_2, largeur-15, hauteur / 2 - 30, largeur-30, hauteur / 2 + 30)
+                    boost_raquette = 2
+                elif boost_joueur == 2:
+                    canvas_jeu.coords(raquette_1, 15, hauteur / 2 - 30, 30, hauteur / 2 + 30)
+                    boost_raquette = 2
+                else:
+                    pass
+
+            elif effet_rouge == 'raquette_inverse':
+                if boost_joueur == 1:
+                    canvas_jeu.coords(raquette_2, largeur-15, hauteur / 2 - 30, largeur-30, hauteur / 2 + 30)
+                    boost_raquette = 2
+                elif boost_joueur == 2:
+                    canvas_jeu.coords(raquette_1, 15, hauteur / 2 - 30, 30, hauteur / 2 + 30)
+                    boost_raquette = 2
+                else:
+                    pass
+
+
+
+        bonus_malus()                
 
         fenetre_jeu.update()
         time.sleep(0.01)
-
     
 
 def lancer_parametre():
@@ -182,7 +280,7 @@ raquette_2 = canvas_jeu.create_rectangle(largeur-15, hauteur / 2 - t_raquette, l
 def deplacement_raquette_1(event):
 
     position_raquette_1 = canvas_jeu.coords(raquette_1)
-    vitesse = -10
+    vitesse = -25
 
     if position_raquette_1[1] > 10.0:
         canvas_jeu.move(raquette_1, 0, vitesse)
@@ -191,14 +289,14 @@ def deplacement_raquette_1(event):
 def deplacement_raquette_2(event):
 
     position_raquette_1 = canvas_jeu.coords(raquette_1)
-    vitesse = 10
+    vitesse = 25
 
     if position_raquette_1[3] < 1070.0:
         canvas_jeu.move(raquette_1, 0, vitesse)
 
 def deplacement_raquette_3(event):
 
-    vitesse = -10
+    vitesse = -25
     position_raquette_2 = canvas_jeu.coords(raquette_2)
 
     if position_raquette_2[1] > 10.0:
@@ -206,7 +304,7 @@ def deplacement_raquette_3(event):
 
 def deplacement_raquette_4(event):
 
-    vitesse = 10
+    vitesse = 25
     position_raquette_2 = canvas_jeu.coords(raquette_2)
 
     if position_raquette_2[3] < 1070.0:
@@ -222,13 +320,13 @@ fenetre_jeu.bind("<Down>", deplacement_raquette_4)
 
 menu_principal.title("Pong")
 
-texte_titre = Label(menu_principal, text='PONG')
-btn_jouer = Button(menu_principal, text ='JOUER', command=lancer_parametre, bg = 'green', width = 12)
-btn_quitter = Button(menu_principal, text='Quitter', command=menu_principal.destroy, bg = "red", width=12)
+texte_titre = Label(menu_principal, text='PONG', font = ('Arial', 50, 'bold'))
+btn_jouer = Button(menu_principal, text ='JOUER', command=lancer_parametre, bg = 'green', fg = 'white', font = ('Arial', 50, 'bold'))
+btn_quitter = Button(menu_principal, text='Quitter', command=menu_principal.destroy, bg = "red", font = ('Arial', 50, 'bold'))
 
-texte_titre.place(relx = 0.5, rely = 0.45, anchor = CENTER)
+texte_titre.place(relx = 0.5, rely = 0.30, anchor = CENTER)
 btn_jouer.place(relx = 0.5, rely = 0.5, anchor = CENTER)
-btn_quitter.place(relx = 0.5, rely = 0.55, anchor = CENTER)
+btn_quitter.place(relx = 0.5, rely = 0.7, anchor = CENTER)
 
 # rejouer
 
@@ -250,22 +348,36 @@ btn_non.place(relx = 0.5, rely = 0.6, anchor = CENTER)
 # BULLES BONUS/MALUS
 
 # Jaune : affecte les deux joueurs
-
-
 # Vert : affecte le joueur qui a touché la balle en dernier
-
 # Rouge : affecte l’autre joueur
-bonus_malus_jaune = canvas_jeu.create_oval(-1, -1, -1,-1, fill='yellow', width = 3)
+bonus_malus_jaune = canvas_jeu.create_oval(1, 1, 1, 1, fill='yellow', width = 3)
+bonus_malus_vert = canvas_jeu.create_oval(largeur, hauteur, largeur, hauteur, fill='green', width = 3)
+bonus_malus_rouge = canvas_jeu.create_oval(largeur, -hauteur, largeur, -hauteur, fill='red', width = 3)
 
 def bonus_malus():
-    spawn = randint(0, 1100)
+    spawn = randint(0, 1500)
     lieu_de_spawn_x = 0
     lieu_de_spawn_y = 0
 
     if spawn == 1:
-        lieu_de_spawn_x = randint(50, 1870)
+        lieu_de_spawn_x = randint(100, 1820)
         lieu_de_spawn_y = randint(50, 1030)
         canvas_jeu.coords(bonus_malus_jaune, lieu_de_spawn_x - t_balle, lieu_de_spawn_y - t_balle, lieu_de_spawn_x + t_balle,lieu_de_spawn_y + t_balle)
+    if spawn == 2:
+        lieu_de_spawn_x = randint(100, 1820)
+        lieu_de_spawn_y = randint(50, 1030)
+        canvas_jeu.coords(bonus_malus_vert, lieu_de_spawn_x - t_balle, lieu_de_spawn_y - t_balle, lieu_de_spawn_x + t_balle,lieu_de_spawn_y + t_balle)
+    if spawn == 3:
+        lieu_de_spawn_x = randint(100, 1820)
+        lieu_de_spawn_y = randint(50, 1030)
+        canvas_jeu.coords(bonus_malus_rouge, lieu_de_spawn_x - t_balle, lieu_de_spawn_y - t_balle, lieu_de_spawn_x + t_balle,lieu_de_spawn_y + t_balle)
+
+
+
+
+
+
+
 
 # paramètres
 
@@ -277,7 +389,7 @@ fenetre_parametre.attributes('-fullscreen',True )
 
 fenetre_parametre.title("Pong")
 
-texte_parametre = Label(fenetre_parametre, text='Paramètres du jeu')
+texte_parametre = Label(fenetre_parametre, text='Paramètres du jeu', font = ('Arial', 20, 'bold'))
 texte_pts = Label(fenetre_parametre, text='Nombre de points pour gagner :')
 texte_vitesse = Label(fenetre_parametre, text='Vitesse de la balle en début de partie :')
 texte_balle = Label(fenetre_parametre, text='Couleur de la balle :')
@@ -285,7 +397,7 @@ texte_r1 = Label(fenetre_parametre, text='Couleur de la raquette du J1 :')
 texte_r2 = Label(fenetre_parametre, text='Couleur de la raquette du J2 :')
 texte_bg = Label(fenetre_parametre, text="Couleur du fond d'écran :")
 
-saisie_pts = Entry(fenetre_parametre, width= 3)
+saisie_pts = Entry(fenetre_parametre, width= 4)
 
 choix_vitesse = ['Très lent', 'Lent', 'Moyen', 'Rapide']
 saisie_vitesse = ttk.Combobox(fenetre_parametre, values = choix_vitesse, width = 9)
@@ -297,29 +409,32 @@ saisie_c_r2 = ttk.Combobox(fenetre_parametre, values = choix_couleur, width = 9)
 saisie_c_bg = ttk.Combobox(fenetre_parametre, values = choix_couleur, width = 9)
 
 
+btn_jouer_2 = Button(fenetre_parametre, text ='JOUER', command=lancer_jeu, bg = 'green', font = ('Arial', 20, 'bold'))
+btn_retour = Button(fenetre_parametre, text='Retour', command=retour, bg = "red", font = ('Arial', 20, 'bold'))
 
-valider_pts = Button(fenetre_parametre, text ='Valider', command=test)
-btn_jouer_2 = Button(fenetre_parametre, text ='JOUER', command=lancer_jeu, bg = 'green', width = 12)
-btn_retour = Button(fenetre_parametre, text='Retour', command=retour, bg = "red", width=12)
+texte_parametre.place(relx = 0.5, rely = 0.2, anchor = CENTER)
+texte_pts.place(relx = 0.52, rely = 0.40, anchor = CENTER)
+texte_vitesse.place(relx = 0.35, rely = 0.40, anchor = CENTER)
+texte_balle.place(relx = 0.35, rely = 0.45, anchor = CENTER)
+texte_r1.place(relx = 0.35, rely = 0.5, anchor = CENTER)
+texte_r2.place(relx = 0.35, rely = 0.55, anchor = CENTER)
+texte_bg.place(relx = 0.35, rely = 0.60, anchor = CENTER)
 
-texte_parametre.place(relx = 0.5, rely = 0.45, anchor = CENTER)
-texte_pts.place(relx = 0.35, rely = 0.6, anchor = CENTER)
-texte_vitesse.place(relx = 0.35, rely = 0.65, anchor = CENTER)
-texte_balle.place(relx = 0.35, rely = 0.7, anchor = CENTER)
-texte_r1.place(relx = 0.35, rely = 0.75, anchor = CENTER)
-texte_r2.place(relx = 0.35, rely = 0.8, anchor = CENTER)
-texte_bg.place(relx = 0.35, rely = 0.85, anchor = CENTER)
+saisie_pts.place(relx = 0.575, rely = 0.40, anchor = CENTER)
+saisie_pts.insert(0,'5')
+saisie_vitesse.place(relx = 0.43, rely = 0.40, anchor = CENTER)
+saisie_vitesse.insert(0,'Lent')
+saisie_c_balle.place(relx = 0.43, rely = 0.45, anchor = CENTER)
+saisie_c_balle.insert(0,'white')
+saisie_c_r1.place(relx = 0.43, rely = 0.5, anchor = CENTER)
+saisie_c_r1.insert(0,'white')
+saisie_c_r2.place(relx = 0.43, rely = 0.55, anchor = CENTER)
+saisie_c_r2.insert(0,'white')
+saisie_c_bg.place(relx = 0.43, rely = 0.6, anchor = CENTER)
+saisie_c_bg.insert(0,'black')
 
-saisie_pts.place(relx = 0.41, rely = 0.6, anchor = CENTER)
-saisie_vitesse.place(relx = 0.43, rely = 0.65, anchor = CENTER)
-saisie_c_balle.place(relx = 0.43, rely = 0.7, anchor = CENTER)
-saisie_c_r1.place(relx = 0.43, rely = 0.75, anchor = CENTER)
-saisie_c_r2.place(relx = 0.43, rely = 0.8, anchor = CENTER)
-saisie_c_bg.place(relx = 0.43, rely = 0.85, anchor = CENTER)
-
-btn_jouer_2.place(relx = 0.5, rely = 0.5, anchor = CENTER)
-btn_retour.place(relx = 0.5, rely = 0.55, anchor = CENTER)
-valider_pts.place(relx = 0.45, rely = 0.6, anchor = CENTER)
+btn_jouer_2.place(relx = 0.55, rely = 0.5, anchor = CENTER)
+btn_retour.place(relx = 0.55, rely = 0.58, anchor = CENTER)
 
 
 
