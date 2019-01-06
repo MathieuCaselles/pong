@@ -82,6 +82,7 @@ def deplacement_balle():
         position_balle = canvas_jeu.coords(balle) #[gauche, haut, droite, bas] 
         position_raquette_1 = canvas_jeu.coords(raquette_1)
         position_raquette_2 = canvas_jeu.coords(raquette_2)
+        position_bonus_malus_jaune = canvas_jeu.coords(bonus_malus_jaune)
 
 
 
@@ -137,6 +138,11 @@ def deplacement_balle():
                 canvas_jeu.coords(raquette_2, largeur-15, hauteur / 2 - t_raquette, largeur-30, hauteur / 2 + t_raquette)
                 fenetre_rejouer.wm_deiconify()
                 jeu_en_cour = False
+
+        bonus_malus()
+        if len(canvas_jeu.find_overlapping(*position_bonus_malus_jaune)) > 1:
+            canvas_jeu.coords(bonus_malus_jaune, -1, -1, -1, -1)
+
 
         fenetre_jeu.update()
         time.sleep(0.01)
@@ -241,6 +247,25 @@ texte_rejouer.place(relx = 0.5, rely = 0.30, anchor = CENTER)
 btn_oui.place(relx = 0.5, rely = 0.5, anchor = CENTER)
 btn_non.place(relx = 0.5, rely = 0.6, anchor = CENTER)
 
+# BULLES BONUS/MALUS
+
+# Jaune : affecte les deux joueurs
+
+
+# Vert : affecte le joueur qui a touché la balle en dernier
+
+# Rouge : affecte l’autre joueur
+bonus_malus_jaune = canvas_jeu.create_oval(-1, -1, -1,-1, fill='yellow', width = 3)
+
+def bonus_malus():
+    spawn = randint(0, 1100)
+    lieu_de_spawn_x = 0
+    lieu_de_spawn_y = 0
+
+    if spawn == 1:
+        lieu_de_spawn_x = randint(50, 1870)
+        lieu_de_spawn_y = randint(50, 1030)
+        canvas_jeu.coords(bonus_malus_jaune, lieu_de_spawn_x - t_balle, lieu_de_spawn_y - t_balle, lieu_de_spawn_x + t_balle,lieu_de_spawn_y + t_balle)
 
 # paramètres
 
