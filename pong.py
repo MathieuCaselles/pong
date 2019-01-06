@@ -88,14 +88,14 @@ def deplacement_balle():
 
         if position_balle[3] >= hauteur or position_balle[1] <= 0:
             vitesse_y = -vitesse_y
-        if position_balle[0] <= position_raquette_1[2] and position_raquette_1[1]<= position_balle[3] and position_raquette_1[3] >= position_balle[1]:
+        if len(canvas_jeu.find_overlapping(*position_raquette_1)) > 1:
             vitesse_x = -vitesse_x
             vitesse_x += 0.4
             if vitesse_y > 0:
                 vitesse_y += 0.4
             else:
                 vitesse_y -= 0.4
-        if position_balle[2] >= position_raquette_2[0] and position_raquette_2[1]<= position_balle[3] and position_raquette_2[3] >= position_balle[1]:
+        if len(canvas_jeu.find_overlapping(*position_raquette_2)) > 1:
             vitesse_x = -vitesse_x
             vitesse_x -= 0.4
             if vitesse_y > 0:
